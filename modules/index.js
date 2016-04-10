@@ -1,4 +1,5 @@
 exports.DefaultRoute = require('./components/DefaultRoute');
+exports.AuthRoute = require('./components/AuthRoute');
 exports.Link = require('./components/Link');
 exports.NotFoundRoute = require('./components/NotFoundRoute');
 exports.Redirect = require('./components/Redirect');
