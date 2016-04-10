@@ -1,58 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bd05567f-1611-4250-aa8b-8041063ba3ec" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/react_router_node_modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/react-router.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/components/AuthRoute.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/Cancellation.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/History.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/Match.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/Navigation.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/PathUtils.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/PropTypes.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/Redirect.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/Route.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/ScrollHistory.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/State.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/TestUtils.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/Transition.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/actions/LocationActions.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/behaviors/ImitateBrowserBehavior.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/behaviors/ScrollToTopBehavior.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/components/ActiveHandler.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/components/ContextWrapper.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/components/DefaultRoute.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/components/Link.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/components/NotFoundRoute.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/components/Redirect.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/components/Route.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/components/RouteHandler.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/createRouter.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/createRoutesFromReactChildren.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/getWindowScrollPosition.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/index.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/isReactChildren.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/locations/HashLocation.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/locations/HistoryLocation.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/locations/RefreshLocation.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/locations/StaticLocation.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/locations/TestLocation.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/runRouter.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/supportsHistory.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/lib/warning.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/package.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/umd/ReactRouter.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/umd/ReactRouter.min.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/index.js" afterPath="$PROJECT_DIR$/modules/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/build.sh" afterPath="$PROJECT_DIR$/scripts/build.sh" />
-    </list>
+    <list default="true" id="bd05567f-1611-4250-aa8b-8041063ba3ec" name="Default" comment="" />
     <ignored path="react-router.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -245,20 +194,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="react-router" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="react-router" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -340,12 +275,12 @@
       <option name="presentableId" value="Default" />
       <updated>1460194116342</updated>
       <workItem from="1460194117570" duration="3276000" />
-      <workItem from="1460296227636" duration="1934000" />
+      <workItem from="1460296227636" duration="1988000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5210000" />
+    <option name="totallyTimeSpent" value="5264000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="714" extended-state="0" />
