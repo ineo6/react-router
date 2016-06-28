@@ -4,6 +4,7 @@
   - [`<Router>`](#router)
   - [`<Link>`](#link)
   - [`<IndexLink>`](#indexlink)
+  - [`withRouter`](#withroutercomponent)
   - [`<RouterContext>`](#routercontext)
     - [`context.router`](#contextrouter)
   - `<RoutingContext>` (deprecated, use `<RouterContext>`)
@@ -76,15 +77,15 @@ function createElement(Component, props) {
 }
 ```
 
-##### `stringifyQuery(queryObject)`
+##### `stringifyQuery(queryObject)` (deprecated)
 A function used to convert an object from [`<Link>`](#link)s or calls to
 [`transitionTo`](#transitiontopathname-query-state) to a URL query string.
 
-##### `parseQueryString(queryString)`
+##### `parseQueryString(queryString)` (deprecated)
 A function used to convert a query string into an object that gets passed to route component props.
 
 ##### `onError(error)`
-While the router is matching, errors may bubble up, here is your opportunity to catch and deal with them. Typically these will come from async features like [`route.getComponents`](#getcomponentslocation-callback), [`route.getIndexRoute`](#getindexroutelocation-callback), and [`route.getChildRoutes`](#getchildrouteslocation-callback).
+While the router is matching, errors may bubble up, here is your opportunity to catch and deal with them. Typically these will come from async features like [`route.getComponents`](#getcomponentsnextstate-callback), [`route.getIndexRoute`](#getindexroutepartialnextstate-callback), and [`route.getChildRoutes`](#getchildroutespartialnextstate-callback).
 
 ##### `onUpdate()`
 Called whenever the router updates its state in response to URL changes.
@@ -116,15 +117,15 @@ A [location descriptor](https://github.com/mjackson/history/blob/master/docs/Glo
   * `hash`: A hash to put in the URL, e.g. `#a-hash`.
   * `state`: State to persist to the `location`.
 
-##### `query` **([Deprecated](https://github.com/reactjs/react-router/blob/master/upgrade-guides/v2.0.0.md#link-to-onenter-and-isactive-use-location-descriptors) see `to`)**
+##### `query` **([deprecated](/upgrade-guides/v2.0.0.md#link-to-onenter-and-isactive-use-location-descriptors) see `to`)**
 An object of key:value pairs to be stringified.
 
-##### `hash` **([Deprecated](https://github.com/reactjs/react-router/blob/master/upgrade-guides/v2.0.0.md#link-to-onenter-and-isactive-use-location-descriptors) see `to`)**
+##### `hash` **([deprecated](/upgrade-guides/v2.0.0.md#link-to-onenter-and-isactive-use-location-descriptors) see `to`)**
 A hash to put in the URL, e.g. `#a-hash`.
 
-_Note: React Router currently does not manage scroll position, and will not scroll to the element corresponding to the hash. Scroll position management utilities are available in the [scroll-behavior](https://github.com/taion/scroll-behavior) library._
+_Note: React Router currently does not manage scroll position, and will not scroll to the element corresponding to the hash._
 
-##### `state` **([Deprecated](https://github.com/reactjs/react-router/blob/master/upgrade-guides/v2.0.0.md#link-to-onenter-and-isactive-use-location-descriptors) see `to`)**
+##### `state` **([deprecated](/upgrade-guides/v2.0.0.md#link-to-onenter-and-isactive-use-location-descriptors) see `to`)**
 State to persist to the `location`.
 
 ##### `activeClassName`
@@ -162,10 +163,13 @@ Given a route like `<Route path="/users/:userId" />`:
 ### `<IndexLink>`
 An `<IndexLink>` is like a [`<Link>`](#link), except it is only active when the current route is exactly the linked route. It is equivalent to `<Link>` with the `onlyActiveOnIndex` prop set.
 
+### `withRouter(component)`
+A HoC (higher-order component) that wraps another component to provide `this.props.router`. Pass in your component and it will return the wrapped component.
+
 ### `<RouterContext>`
 A `<RouterContext>` renders the component tree for a given router state. Its used by `<Router>` but also useful for server rendering and integrating in brownfield development.
 
-It also provides a `router` object on `context`.
+It also provides a `router` object on [context](https://facebook.github.io/react/docs/context.html).
 
 #### `context.router`
 
@@ -196,6 +200,18 @@ Go back one entry in the history.
 
 ##### `goForward()`
 Go forward one entry in the history.
+
+##### `setRouteLeaveHook(route, hook)`
+Registers the given hook function to run before leaving the given route.
+
+During a normal transition, the hook function receives the next location as its only argument and can return either a prompt message (string) to show the user, to make sure they want to leave the page; or `false`, to prevent the transition. Any other return value will have no effect.
+
+During the beforeunload event (in browsers) the hook receives no arguments.
+In this case it must return a prompt message to prevent the transition.
+
+Returns a function that may be used to unbind the listener.
+
+You don't need to manually tear down the route leave hook in most cases. We automatically remove all attached route leave hooks after leaving the associated route.
 
 ##### `createPath(pathOrLoc, query)`
 Stringifies the query into the pathname, using the router's config.
@@ -264,7 +280,7 @@ const routes = (
   <Route component={App}>
     <Route path="groups" components={{main: Groups, sidebar: GroupsSidebar}} />
     <Route path="users" components={{main: Users, sidebar: UsersSidebar}}>
-      <Route path="users/:userId" component={Profile} />
+      <Route path=":userId" component={Profile} />
     </Route>
   </Route>
 )
@@ -300,21 +316,20 @@ class Users extends React.Component {
 }
 ```
 
-##### `getComponent(location, callback)`
-Same as `component` but asynchronous, useful for
-code-splitting.
+##### `getComponent(nextState, callback)`
+Same as `component` but asynchronous, useful for code-splitting.
 
 ###### `callback` signature
 `cb(err, component)`
 
 ```js
-<Route path="courses/:courseId" getComponent={(location, cb) => {
+<Route path="courses/:courseId" getComponent={(nextState, cb) => {
   // do asynchronous stuff to find the components
   cb(null, Course)
 }} />
 ```
 
-##### `getComponents(location, callback)`
+##### `getComponents(nextState, callback)`
 Same as `components` but asynchronous, useful for
 code-splitting.
 
@@ -322,7 +337,7 @@ code-splitting.
 `cb(err, components)`
 
 ```js
-<Route path="courses/:courseId" getComponents={(location, cb) => {
+<Route path="courses/:courseId" getComponents={(nextState, cb) => {
   // do asynchronous stuff to find the components
   cb(null, {sidebar: CourseSidebar, content: Course})
 }} />
@@ -352,8 +367,8 @@ A plain JavaScript object route definition. `<Router>` turns JSX `<Route>`s into
 ##### `childRoutes`
 An array of child routes, same as `children` in JSX route configs.
 
-##### `getChildRoutes(location, callback)`
-Same as `childRoutes` but asynchronous and receives the `location`. Useful for code-splitting and dynamic route matching (given some state or session data to return a different set of child routes).
+##### `getChildRoutes(partialNextState, callback)`
+Same as `childRoutes` but asynchronous and receives `partialNextState`. Useful for code-splitting and dynamic route matching (given some state or session data to return a different set of child routes).
 
 ###### `callback` signature
 `cb(err, routesArray)`
@@ -383,8 +398,8 @@ let myRoute = {
 
 let myRoute = {
   path: 'picture/:id',
-  getChildRoutes(location, cb) {
-    let { state } = location
+  getChildRoutes(partialNextState, cb) {
+    let { state } = partialNextState
 
     if (state && state.fromDashboard) {
       cb(null, [dashboardPictureRoute])
@@ -398,9 +413,9 @@ let myRoute = {
 ##### `indexRoute`
 The [index route](/docs/guides/IndexRoutes.md). This is the same as specifying an `<IndexRoute>` child when using JSX route configs.
 
-##### `getIndexRoute(location, callback)`
+##### `getIndexRoute(partialNextState, callback)`
 
-Same as `indexRoute`, but asynchronous and receives the `location`. As with `getChildRoutes`, this can be useful for code-splitting and dynamic route matching.
+Same as `indexRoute`, but asynchronous and receives `partialNextState`. As with `getChildRoutes`, this can be useful for code-splitting and dynamic route matching.
 
 ###### `callback` signature
 `cb(err, route)`
@@ -419,7 +434,7 @@ let myRoute = {
 // async index route
 let myRoute = {
   path: 'courses',
-  getIndexRoute(location, cb) {
+  getIndexRoute(partialNextState, cb) {
     // do something async here
     cb(null, myIndexRoute)
   }
@@ -639,14 +654,11 @@ One or many [`<Route>`](#route)s or [`PlainRoute`](#plainroute)s.
 
 
 ### `PropTypes`
-The following objects are exposed as properties of the exported PropTypes object:
-- `falsy`: Checks that a component does not have a prop
-- `history`
-- `location`
-- `component`
-- `components`
-- `route`
-- `routes`
+The following prop types are exported at top level and from `react-router/lib/PropTypes`:
+- `routerShape`: Shape for the `router` object on context
+- `locationShape`: Shape for the `location` object on route component props
+
+Previously, a number of prop types intended for internal use were also exported under `PropTypes`. These are deprecated and should not be used.
 
 
 ### `useRoutes(createHistory)` (deprecated)

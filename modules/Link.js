@@ -1,5 +1,7 @@
 import React from 'react'
 import warning from './routerWarning'
+import invariant from 'invariant'
+import { routerShape } from './PropTypes'
 
 const { bool, object, string, func, oneOfType } = React.PropTypes
 
@@ -49,7 +51,7 @@ function createLocationDescriptor(to, { query, hash, state }) {
 const Link = React.createClass({
 
   contextTypes: {
-    router: object
+    router: routerShape
   },
 
   propTypes: {
@@ -60,18 +62,23 @@ const Link = React.createClass({
     activeStyle: object,
     activeClassName: string,
     onlyActiveOnIndex: bool.isRequired,
-    onClick: func
+    onClick: func,
+    target: string
   },
 
   getDefaultProps() {
     return {
       onlyActiveOnIndex: false,
-      className: '',
       style: {}
     }
   },
 
   handleClick(event) {
+    invariant(
+      this.context.router,
+      '<Link>s rendered outside of a router context cannot handle clicks.'
+    )
+    
     let allowTransition = true
 
     if (this.props.onClick)
@@ -118,8 +125,13 @@ const Link = React.createClass({
 
       if (activeClassName || (activeStyle != null && !isEmptyObject(activeStyle))) {
         if (router.isActive(location, onlyActiveOnIndex)) {
-          if (activeClassName)
-            props.className += props.className === '' ? activeClassName : ` ${activeClassName}`
+          if (activeClassName) {
+            if (props.className) {
+              props.className += ` ${activeClassName}`
+            } else {
+              props.className = activeClassName
+            }
+          }
 
           if (activeStyle)
             props.style = { ...props.style, ...activeStyle }

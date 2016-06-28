@@ -2,6 +2,7 @@
 export Router from './Router'
 export Link from './Link'
 export IndexLink from './IndexLink'
+export withRouter from './withRouter'
 
 /* components (configuration) */
 export IndexRedirect from './IndexRedirect'
@@ -19,10 +20,11 @@ export useRoutes from './useRoutes'
 export { createRoutes } from './RouteUtils'
 export RouterContext from './RouterContext'
 export RoutingContext from './RoutingContext'
-export PropTypes from './PropTypes'
+export PropTypes, { locationShape, routerShape } from './PropTypes'
 export match from './match'
 export useRouterHistory from './useRouterHistory'
 export { formatPattern } from './PatternUtils'
+export applyRouterMiddleware from './applyRouterMiddleware'
 
 /* histories */
 export browserHistory from './browserHistory'
