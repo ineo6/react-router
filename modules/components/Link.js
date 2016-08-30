@@ -40,6 +40,11 @@ class Link extends React.Component {
     if (isModifiedEvent(event) || !isLeftClickEvent(event))
       return;
 
+    // If target prop is set (e.g. to "_blank"), let browser handle link.
+    /* istanbul ignore if: untestable with Karma */
+    if (this.props.target)
+      return
+
     if (clickResult === false || event.defaultPrevented === true)
       allowTransition = false;
 
@@ -102,7 +107,8 @@ Link.propTypes = {
   params: PropTypes.object,
   query: PropTypes.object,
   activeStyle: PropTypes.object,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  target: PropTypes.string
 };
 
 Link.defaultProps = {
