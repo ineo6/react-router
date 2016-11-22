@@ -1,7 +1,6 @@
 import expect from 'expect'
 import { createMemoryHistory } from 'history'
 import React from 'react'
-import { canUseMembrane } from '../deprecateObjectProperties'
 import IndexRoute from '../IndexRoute'
 import matchRoutes from '../matchRoutes'
 import Route from '../Route'
@@ -13,7 +12,8 @@ describe('matchRoutes', function () {
   let
     RootRoute, UsersRoute, UsersIndexRoute, UserRoute, PostRoute, FilesRoute,
     AboutRoute, TeamRoute, ProfileRoute, GreedyRoute, OptionalRoute,
-    OptionalRouteChild, CatchAllRoute
+    OptionalRouteChild, CatchAllRoute, ContactRoute, ContactContainerRoute,
+    ContactIndexRoute
   let createLocation = createMemoryHistory().createLocation
 
   beforeEach(function () {
@@ -30,6 +30,11 @@ describe('matchRoutes', function () {
     <Route path="/about" />
     <Route path="/(optional)">
       <Route path="child" />
+    </Route>
+    <Route path="/contact">
+      <Route>
+        <IndexRoute />
+      </Route>
     </Route>
     <Route path="*" />
     */
@@ -75,6 +80,14 @@ describe('matchRoutes', function () {
           }
         ]
       },
+      ContactRoute = {
+        path: '/contact',
+        childRoutes: [
+          ContactContainerRoute = {
+            indexRoute: (ContactIndexRoute = {})
+          }
+        ]
+      },
       CatchAllRoute = {
         path: '*'
       }
@@ -87,6 +100,16 @@ describe('matchRoutes', function () {
         matchRoutes(routes, createLocation('/users'), function (error, match) {
           expect(match).toExist()
           expect(match.routes).toEqual([ RootRoute, UsersRoute, UsersIndexRoute ])
+          done()
+        })
+      })
+    })
+
+    describe('when the location matches an index route inside a pathless route', function () {
+      it('matches the correct routes', function (done) {
+        matchRoutes(routes, createLocation('/contact'), function (error, match) {
+          expect(match).toExist()
+          expect(match.routes).toEqual([ ContactRoute, ContactContainerRoute, ContactIndexRoute ])
           done()
         })
       })
@@ -291,6 +314,34 @@ describe('matchRoutes', function () {
     describeRoutes()
   })
 
+  describe('a Promise-based route config', function () {
+    function makeAsyncRouteConfig(routes) {
+      routes.forEach(function (route) {
+        const { childRoutes, indexRoute } = route
+
+        if (childRoutes) {
+          delete route.childRoutes
+
+          route.getChildRoutes = () => new Promise(resolve => resolve(childRoutes))
+
+          makeAsyncRouteConfig(childRoutes)
+        }
+
+        if (indexRoute) {
+          delete route.indexRoute
+
+          route.getIndexRoute = () => new Promise(resolve => resolve(indexRoute))
+        }
+      })
+    }
+
+    beforeEach(function () {
+      makeAsyncRouteConfig(routes)
+    })
+
+    describeRoutes()
+  })
+
   describe('an asynchronous JSX route config', function () {
     let getChildRoutes, getIndexRoute, jsxRoutes
 
@@ -335,13 +386,6 @@ describe('matchRoutes', function () {
           expect(partialNextState.params).toEqual({ groupId: 'foo' })
           expect(partialNextState.location.pathname).toEqual('/foo/users/5')
 
-          // Only the calls below this point should emit deprecation warnings.
-          if (canUseMembrane) {
-            shouldWarn('deprecated')
-          }
-
-          expect(partialNextState.pathname).toEqual('/foo/users/5')
-
           done()
         }
       )
@@ -357,13 +401,6 @@ describe('matchRoutes', function () {
           const partialNextState = getIndexRoute.calls[0].arguments[0]
           expect(partialNextState.params).toEqual({ groupId: 'bar' })
           expect(partialNextState.location.pathname).toEqual('/bar/users')
-
-          // Only the calls below this point should emit deprecation warnings.
-          if (canUseMembrane) {
-            shouldWarn('deprecated')
-          }
-
-          expect(partialNextState.pathname).toEqual('/bar/users')
 
           done()
         }
