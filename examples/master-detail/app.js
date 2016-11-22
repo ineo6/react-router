@@ -1,9 +1,10 @@
 import React from 'react'
 import { render, findDOMNode } from 'react-dom'
-import {
-  browserHistory, Router, Route, IndexRoute, Link, withRouter
-} from 'react-router'
+import { browserHistory, Router, Route, IndexRoute, Link, withRouter } from 'react-router'
+
+import withExampleBasename from '../withExampleBasename'
 import ContactStore from './ContactStore'
+
 import './app.css'
 
 const App = React.createClass({
@@ -27,9 +28,6 @@ const App = React.createClass({
   },
 
   updateContacts() {
-    if (!this.isMounted())
-      return
-
     this.setState({
       contacts: ContactStore.getContacts(),
       loading: false
@@ -91,9 +89,6 @@ const Contact = withRouter(
     },
 
     updateContact() {
-      if (!this.isMounted())
-        return
-
       this.setState(this.getStateFromStore())
     },
 
@@ -156,7 +151,7 @@ const NotFound = React.createClass({
 })
 
 render((
-  <Router history={browserHistory}>
+  <Router history={withExampleBasename(browserHistory, __dirname)}>
     <Route path="/" component={App}>
       <IndexRoute component={Index} />
       <Route path="contact/new" component={NewContact} />

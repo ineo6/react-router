@@ -1,8 +1,8 @@
 import React, { createClass } from 'react'
 import { render } from 'react-dom'
-import {
-  Router, Route, IndexRoute, browserHistory, Link, withRouter
-} from 'react-router'
+import { Router, Route, IndexRoute, browserHistory, Link, withRouter } from 'react-router'
+
+import withExampleBasename from '../withExampleBasename'
 
 function App(props) {
   return (
@@ -61,13 +61,13 @@ function requireCredentials(nextState, replace, next) {
   const query = nextState.location.query
   if (query.qsparam) {
     serverAuth(query.qsparam)
-    .then(
-      () => next(),
-      () => {
-        replace('/error')
-        next()
-      }
-    )
+      .then(
+        () => next(),
+        () => {
+          replace('/error')
+          next()
+        }
+      )
   } else {
     replace('/error')
     next()
@@ -88,7 +88,7 @@ function serverAuth(authToken) {
 }
 
 render((
-  <Router history={browserHistory}>
+  <Router history={withExampleBasename(browserHistory, __dirname)}>
     <Route path="/" component={App}>
       <IndexRoute component={Form} />
       <Route path="page" component={Page} onEnter={requireCredentials}/>

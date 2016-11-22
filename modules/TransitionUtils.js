@@ -1,24 +1,39 @@
 import { loopAsync } from './AsyncUtils'
-import warning from './routerWarning'
 
-function createTransitionHook(hook, route, asyncArity) {
-  return function (...args) {
+class PendingHooks {
+  hooks = []
+  add = hook => this.hooks.push(hook)
+  remove = hook => this.hooks = this.hooks.filter(h => h !== hook)
+  has = hook => this.hooks.indexOf(hook) !== -1
+  clear = () => this.hooks = []
+}
+
+const enterHooks = new PendingHooks()
+const changeHooks = new PendingHooks()
+
+function createTransitionHook(hook, route, asyncArity, pendingHooks) {
+  const isSync = hook.length < asyncArity
+
+  const transitionHook = (...args) => {
     hook.apply(route, args)
 
-    if (hook.length < asyncArity) {
+    if (isSync) {
       let callback = args[args.length - 1]
       // Assume hook executes synchronously and
       // automatically call the callback.
       callback()
     }
   }
+
+  pendingHooks.add(transitionHook)
+
+  return transitionHook
 }
 
 function getEnterHooks(routes) {
   return routes.reduce(function (hooks, route) {
     if (route.onEnter)
-      hooks.push(createTransitionHook(route.onEnter, route, 3))
-
+      hooks.push(createTransitionHook(route.onEnter, route, 3, enterHooks))
     return hooks
   }, [])
 }
@@ -26,7 +41,7 @@ function getEnterHooks(routes) {
 function getChangeHooks(routes) {
   return routes.reduce(function (hooks, route) {
     if (route.onChange)
-      hooks.push(createTransitionHook(route.onChange, route, 4))
+      hooks.push(createTransitionHook(route.onChange, route, 4, changeHooks))
     return hooks
   }, [])
 }
@@ -38,21 +53,7 @@ function runTransitionHooks(length, iter, callback) {
   }
 
   let redirectInfo
-  function replace(location, deprecatedPathname, deprecatedQuery) {
-    if (deprecatedPathname) {
-      warning(
-        false,
-        '`replaceState(state, pathname, query) is deprecated; use `replace(location)` with a location descriptor instead. http://tiny.cc/router-isActivedeprecated'
-      )
-      redirectInfo = {
-        pathname: deprecatedPathname,
-        query: deprecatedQuery,
-        state: location
-      }
-
-      return
-    }
-
+  function replace(location) {
     redirectInfo = location
   }
 
@@ -78,9 +79,16 @@ function runTransitionHooks(length, iter, callback) {
  * which could lead to a non-responsive UI if the hook is slow.
  */
 export function runEnterHooks(routes, nextState, callback) {
+  enterHooks.clear()
   const hooks = getEnterHooks(routes)
   return runTransitionHooks(hooks.length, (index, replace, next) => {
-    hooks[index](nextState, replace, next)
+    const wrappedNext = (...args) => {
+      if (enterHooks.has(hooks[index])) {
+        next(...args)
+        enterHooks.remove(hooks[index])
+      }
+    }
+    hooks[index](nextState, replace, wrappedNext)
   }, callback)
 }
 
@@ -95,17 +103,24 @@ export function runEnterHooks(routes, nextState, callback) {
  * which could lead to a non-responsive UI if the hook is slow.
  */
 export function runChangeHooks(routes, state, nextState, callback) {
+  changeHooks.clear()
   const hooks = getChangeHooks(routes)
   return runTransitionHooks(hooks.length, (index, replace, next) => {
-    hooks[index](state, nextState, replace, next)
+    const wrappedNext = (...args) => {
+      if (changeHooks.has(hooks[index])) {
+        next(...args)
+        changeHooks.remove(hooks[index])
+      }
+    }
+    hooks[index](state, nextState, replace, wrappedNext)
   }, callback)
 }
 
 /**
  * Runs all onLeave hooks in the given array of routes in order.
  */
-export function runLeaveHooks(routes) {
+export function runLeaveHooks(routes, prevState) {
   for (let i = 0, len = routes.length; i < len; ++i)
     if (routes[i].onLeave)
-      routes[i].onLeave.call(routes[i])
+      routes[i].onLeave.call(routes[i], prevState)
 }
