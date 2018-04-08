@@ -24,12 +24,14 @@ AuthRoute.propTypes = {
   path: PropTypes.string,
   handler: PropTypes.func,
   ignoreScrollBehavior: PropTypes.bool,
-  auth:PropTypes.bool
+  auth:PropTypes.bool,
+  passQuery:PropTypes.bool,
 };
 
 AuthRoute.defaultProps = {
   handler: RouteHandler,
-  auth:true
+  auth:true,
+  passQuery:false,
 };
 
 module.exports = AuthRoute;
