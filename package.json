@@ -1,5 +1,5 @@
 {
-  "name": "react-router",
+  "name": "@unovo/react-router",
   "version": "3.0.0",
   "description": "A complete routing library for React",
   "files": [
