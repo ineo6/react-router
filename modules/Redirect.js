@@ -1,10 +1,9 @@
-import React from 'react'
+import createReactClass from 'create-react-class'
+import { string, object } from 'prop-types'
 import invariant from 'invariant'
 import { createRouteFromReactElement } from './RouteUtils'
 import { formatPattern } from './PatternUtils'
 import { falsy } from './InternalPropTypes'
-
-const { string, object } = React.PropTypes
 
 /**
  * A <Redirect> is used to declare another URL path a client should
@@ -14,7 +13,8 @@ const { string, object } = React.PropTypes
  * and are traversed in the same manner.
  */
 /* eslint-disable react/require-render-return */
-const Redirect = React.createClass({
+const Redirect = createReactClass({
+  displayName: 'Redirect',
 
   statics: {
 

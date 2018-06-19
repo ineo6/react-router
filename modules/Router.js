@@ -1,5 +1,7 @@
 import invariant from 'invariant'
 import React from 'react'
+import createReactClass from 'create-react-class'
+import { func, object } from 'prop-types'
 
 import createTransitionManager from './createTransitionManager'
 import { routes } from './InternalPropTypes'
@@ -8,27 +10,28 @@ import { createRoutes } from './RouteUtils'
 import { createRouterObject, assignRouterState } from './RouterUtils'
 import warning from './routerWarning'
 
-const { func, object } = React.PropTypes
+const propTypes = {
+  history: object,
+  children: routes,
+  routes, // alias for children
+  render: func,
+  createElement: func,
+  onError: func,
+  onUpdate: func,
+
+  // PRIVATE: For client-side rehydration of server match.
+  matchContext: object
+}
 
 /**
  * A <Router> is a high-level API for automatically setting up
  * a router that renders a <RouterContext> with all the props
  * it needs each time the URL changes.
  */
-const Router = React.createClass({
+const Router = createReactClass({
+  displayName: 'Router',
 
-  propTypes: {
-    history: object,
-    children: routes,
-    routes, // alias for children
-    render: func,
-    createElement: func,
-    onError: func,
-    onUpdate: func,
-
-    // PRIVATE: For client-side rehydration of server match.
-    matchContext: object
-  },
+  propTypes,
 
   getDefaultProps() {
     return {
@@ -77,9 +80,9 @@ const Router = React.createClass({
 
     invariant(
       history.getCurrentLocation,
-      'You have provided a history object created with history v2.x or ' +
-      'earlier. This version of React Router is only compatible with v3 ' +
-      'history objects. Please upgrade to history v3.x.'
+      'You have provided a history object created with history v4.x or v2.x ' +
+        'and earlier. This version of React Router is only compatible with v3 ' +
+        'history objects. Please change to history v3.x.'
     )
 
     return createTransitionManager(
@@ -132,7 +135,7 @@ const Router = React.createClass({
 
     // Only forward non-Router-specific props to routing context, as those are
     // the only ones that might be custom routing context props.
-    Object.keys(Router.propTypes).forEach(propType => delete props[propType])
+    Object.keys(propTypes).forEach(propType => delete props[propType])
 
     return render({
       ...props,

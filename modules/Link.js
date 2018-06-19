@@ -1,9 +1,9 @@
 import React from 'react'
+import createReactClass from 'create-react-class'
+import { bool, object, string, func, oneOfType } from 'prop-types'
 import invariant from 'invariant'
 import { routerShape } from './PropTypes'
 import { ContextSubscriber } from './ContextUtils'
-
-const { bool, object, string, func, oneOfType } = React.PropTypes
 
 function isLeftClickEvent(event) {
   return event.button === 0
@@ -38,13 +38,9 @@ function resolveToLocation(to, router) {
  * You could use the following component to link to that route:
  *
  *   <Link to={`/posts/${post.id}`} />
- *
- * Links may pass along location state and/or query string parameters
- * in the state/query props, respectively.
- *
- *   <Link ... query={{ show: true }} state={{ the: 'state' }} />
  */
-const Link = React.createClass({
+const Link = createReactClass({
+  displayName: 'Link',
 
   mixins: [ ContextSubscriber('router') ],
 
@@ -54,9 +50,6 @@ const Link = React.createClass({
 
   propTypes: {
     to: oneOfType([ string, object, func ]),
-    query: object,
-    hash: string,
-    state: object,
     activeStyle: object,
     activeClassName: string,
     onlyActiveOnIndex: bool.isRequired,
@@ -105,7 +98,7 @@ const Link = React.createClass({
 
     if (router) {
       // If user does not specify a `to` prop, return an empty anchor tag.
-      if (to == null) { return <a {...props} /> }
+      if (!to) { return <a {...props} /> }
 
       const toLocation = resolveToLocation(to, router)
       props.href = router.createHref(toLocation)
